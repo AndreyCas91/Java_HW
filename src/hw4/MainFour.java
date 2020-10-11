@@ -4,8 +4,8 @@ import java.util.Random;
 import java.util.Scanner;
 
 public class MainFour {
-    static final int SIZE = 3;
-//    static final int DOTS_TO_WIN = 3;
+    static final int SIZE = 5;
+    static final int DOTS_TO_WIN = 4;
 
     static final char DOT_X = 'X';
     static final char DOT_O = 'O';
@@ -23,7 +23,7 @@ public class MainFour {
         while (true) {
             humanTurn();
             printMap();
-            if(checkWin(DOT_X)){
+            if(checkWinTwo(DOT_X, DOTS_TO_WIN)){
                 System.out.println("Вы победитель!");
                 break;
             }
@@ -32,10 +32,10 @@ public class MainFour {
                 break;
             }
 
-            aiTurn();
+            iiWin();
             printMap();
-            if(checkWin(DOT_O)){
-                System.out.println("Комьютер победил!");
+            if(checkWinTwo(DOT_O, DOTS_TO_WIN)){
+                System.out.println("Компьютер победил!");
                 break;
             }
             if (isFull()) {
@@ -83,6 +83,7 @@ public class MainFour {
     }
 
     static void aiTurn() {
+
         int x;
         int y;
         do {
@@ -91,7 +92,9 @@ public class MainFour {
         } while (!isCellValid(y, x));
 
         map[y][x] = DOT_O;
+
     }
+
 
 
     static boolean isCellValid(int y, int x) {
@@ -112,19 +115,115 @@ public class MainFour {
         return true;
     }
 
-    static boolean checkWin(char c) {
-        if (map[0][0] == c && map[0][1] == c && map[0][2] == c) { return true; }
-        if (map[1][0] == c && map[1][1] == c && map[1][2] == c) { return true; }
-        if (map[2][0] == c && map[2][1] == c && map[2][2] == c) { return true; }
+// с этого места создавал методы!!!!!!!!!!!!!!!!!!!!!!
+//!!!!!!!!!!!!!!!!!!!!!!
+//!!!!!!!!!!!!!!!!!!!!!!!
 
-        if (map[0][0] == c && map[1][0] == c && map[2][0] == c) { return true; }
-        if (map[0][1] == c && map[1][1] == c && map[2][1] == c) { return true; }
-        if (map[0][2] == c && map[1][2] == c && map[2][2] == c) { return true; }
 
-        if (map[0][0] == c && map[1][1] == c && map[2][2] == c) { return true; }
-        if (map[0][2] == c && map[1][1] == c && map[2][0] == c) { return true; }
+    static boolean checkWinTwo(char c, int n){
 
+        for (int i = 0; i < map.length; i++) {
+            for (int j = 0; j < map.length; j++) {
+                if(diagonalCheck(c, n, i, j)){
+                    return true;
+                }
+                if(reverseDiagonalCheck(c, n, i, j)){
+                    return true;
+                }
+                if(horisontlCheck(c, n, i, j)){
+                    return true;
+                }
+                if(verticalCheck(c, n, i, j)){
+                    return true;
+                }
+            }
+
+        }
         return false;
     }
+
+    static boolean horisontlCheck (char c, int n, int x, int y){
+        for (int i = 0; i < n; i++) {
+            if(y + i >= map.length){
+                return false;
+            } else if(map[x][y + i] != c){
+                break;
+            } else if(map[x][y + i] == c){
+                if(i == n - 1){
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    static boolean verticalCheck (char c, int n, int x, int y){
+        for (int i = 0; i < n; i++) {
+            if(x + i >= map.length){
+                return false;
+            } else if(map[x + i][y] != c){
+                break;
+            } else if(map[x + i][y] == c){
+                if(i == n - 1){
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    static boolean diagonalCheck (char c, int n, int x, int y){
+        for (int i = 0; i < n; i++) {
+            if(x + i >= map.length || y + i >= map.length){
+                return false;
+            } else if(map[x + i][y + i] != c){
+                break;
+            } else if(map[x + i][y + i] == c){
+                if(i == n - 1){
+                    return true;
+                }
+            }
+
+        }
+        return false;
+    }
+
+    static boolean reverseDiagonalCheck (char c, int n, int x, int y){
+        for (int i = 0; i < n; i++) {
+            if(x - i < 0 || y + i >= map.length){
+                return false;
+            } else if(map[x - i][y + i] != c){
+                break;
+            } else if(map[x - i][y + i] == c){
+                if(i == n - 1){
+                    return true;
+                }
+            }
+
+        }
+        return false;
+    }
+
+    static void iiWin (){
+        for (int i = 0; i < map.length; i++) {
+            for (int j = 0; j < map.length; j++) {
+                if(map[i][j] == DOT_EMPTY){
+                    map[i][j] = DOT_X;
+                    if(checkWinTwo(DOT_X, DOTS_TO_WIN)){
+                        map[i][j] = DOT_O;
+                        return;
+                    } else {
+                        map[i][j] = DOT_EMPTY;
+                    }
+
+                }
+            }
+        }
+
+        aiTurn();
+
+    }
+
+
 
 }
