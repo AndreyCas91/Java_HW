@@ -5,8 +5,6 @@ public class Animals {
     int run;
     int swim;
     static int x;
-    static int y;
-    static int z;
 
     public Animals(String name) {
         this.name = name;
