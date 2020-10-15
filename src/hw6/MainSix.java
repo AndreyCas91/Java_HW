@@ -32,6 +32,9 @@ public class MainSix {
         Cat.sumX();
         Dog.sumX();
 
+
+
+
     }
 
 }
